@@ -6,7 +6,11 @@
 #define TAM_DESC 100
 
 typedef struct {
+    int id;
+    char titulo[100];   
     char descricao[TAM_DESC];
+    char data[11];
+    int status;
     int prioridade;
 } Tarefa;
 
