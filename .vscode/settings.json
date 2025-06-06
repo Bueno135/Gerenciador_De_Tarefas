@@ -2,6 +2,7 @@
     "files.associations": {
         "main.C": "cpp",
         "tarefa.C": "cpp",
-        "tarefas.C": "cpp"
+        "tarefas.C": "cpp",
+        "main copy.C": "cpp"
     }
 }
