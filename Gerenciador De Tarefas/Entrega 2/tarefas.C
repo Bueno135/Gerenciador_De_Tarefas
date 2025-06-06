@@ -28,7 +28,13 @@ void listarTarefas(Tarefa *vetor, int total) {
     }
 
     for (int i = 0; i < total; i++) {
-        printf("Tarefa %d: %s (Prioridade: %d)\n", i + 1, vetor[i].descricao, vetor[i].prioridade);
+        printf("Tarefa %d:\n", i + 1);
+        printf("Título: %s\n", vetor[i].titulo);
+        printf("Descrição: %s\n", vetor[i].descricao);
+        printf("Prioridade: %d\n", vetor[i].prioridade);
+        printf("Data: %s\n", vetor[i].data);
+        printf("Status: %d\n", vetor[i].status);
+        printf("---------------------------\n");
         //Loop para puxar cada tarefa e sua prioridade
     }
 }

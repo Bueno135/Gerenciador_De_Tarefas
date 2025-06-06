@@ -21,6 +21,7 @@ void ordenarData(Tarefa *vetor, int total);
 int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busca);
 
 
-//Código para separar as funções da maine chama-las
+//Cabeçalho para estruturar melhor o projeto e declararação das funções.
+//Separa a lógica da main
 
 #endif

@@ -14,8 +14,12 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
     fgets(vetor[*total].descricao, TAM_DESC, stdin);
     vetor[*total].descricao[strcspn(vetor[*total].descricao, "\n")] = '\0'; // remover '\n'
     //Adicionar tarefa e sua descrição
+
+    do {
     printf("Digite a prioridade da tarefa (1-5): ");
     scanf("%d", &vetor[*total].prioridade);
+    } while (vetor[*total].prioridade < 1 || vetor[*total].prioridade > 5);
+    //Coloca um limite de 5 para a prioridade e continua a repetir a pergunta até o numero ser menor ou igual a 5
 
     printf("Digite o título da tarefa: ");
     getchar(); // limpar buffer
@@ -43,7 +47,13 @@ void listarTarefas(Tarefa *vetor, int total) {
     }
 
     for (int i = 0; i < total; i++) {
-        printf("Tarefa %d: %s (Prioridade: %d)\n", i + 1, vetor[i].descricao, vetor[i].prioridade);
+        printf("Tarefa %d:\n", i + 1);
+        printf("Título: %s\n", vetor[i].titulo);
+        printf("Descrição: %s\n", vetor[i].descricao);
+        printf("Prioridade: %d\n", vetor[i].prioridade);
+        printf("Data: %s\n", vetor[i].data);
+        printf("Status: %d\n", vetor[i].status);
+        printf("---------------------------\n");
         //Loop para puxar cada tarefa e sua prioridade
     }
 }

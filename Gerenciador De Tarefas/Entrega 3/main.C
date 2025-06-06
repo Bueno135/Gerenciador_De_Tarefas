@@ -1,6 +1,7 @@
 // main.c
 #include <stdio.h>
 #include "tarefas.h"
+#include <string.h>
 
 int main() {
     Tarefa tarefas[MAX_TAREFAS];
@@ -10,7 +11,14 @@ int main() {
     char valor_pesquisado[100];
 
     do {
-        printf("\n1 - Adicionar tarefa\n2 - Listar tarefas\n3 - Buscar tarfea\n0 - Sair\nEscolha: ");
+        printf("\n================ MENU ================\n");
+        printf("1 - Adicionar tarefa\n");
+        printf("2 - Listar tarefas\n");
+        printf("3 - Buscar tarefa\n");
+        printf("0 - Sair\n");
+        printf("======================================\n");
+        printf("Escolha: ");
+
         scanf("%d", &opcao);
         //Menu para escolher qual opção você deseja
         switch (opcao) {
