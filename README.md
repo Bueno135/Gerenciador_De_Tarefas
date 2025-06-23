@@ -20,8 +20,8 @@ Para compilar e executar este gerenciador de tarefas, você precisará de um com
 1.  **Clone o repositório** (se aplicável):
 
     ```bash
-    git clone <URL_DO_REPOSITORIO>
-    cd <NOME_DO_REPOSITORIO>
+    git clone <https://github.com/Bueno135/Gerenciador_De_Tarefas>
+    cd <gerenciador_tarefas>
     ```
 
 2.  **Compile os arquivos fonte**:
