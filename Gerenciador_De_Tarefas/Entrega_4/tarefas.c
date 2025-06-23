@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "tarefas.h"
 
 void adicionarTarefa(Tarefa *vetor, int *total) {
@@ -9,6 +10,11 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
     }
 
     vetor[*total].id = *total + 1;
+
+    printf("Digite o título da tarefa: ");
+    getchar(); // limpar buffer
+    fgets(vetor[*total].titulo, 100, stdin);
+    vetor[*total].titulo[strcspn(vetor[*total].titulo, "\n")] = '\0';
 
     printf("Digite a descrição da tarefa: ");
     getchar(); // limpar buffer
@@ -22,13 +28,14 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
     } while (vetor[*total].prioridade < 1 || vetor[*total].prioridade > 5);
     //Coloca um limite de 5 para a prioridade e continua a repetir a pergunta até o numero ser menor ou igual a 5
 
-    printf("Digite o título da tarefa: ");
-    getchar(); // limpar buffer
-    fgets(vetor[*total].titulo, 100, stdin);
-    vetor[*total].titulo[strcspn(vetor[*total].titulo, "\n")] = '\0';
-
+    do {
     printf("Digite a data da tarefa (DD/MM/AAAA): ");
     scanf("%s", vetor[*total].data);
+    if (!validarData(vetor[*total].data)) {
+        printf("Data inválida. Tente novamente.\n");
+    }
+    } while (!validarData(vetor[*total].data));
+    //Validação de data para saber se está seguindo a devida formatação
 
     do {
     printf("Digite o status da tarefa (0 = pendente, 1 = concluída): ");
@@ -38,6 +45,7 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
 
     (*total)++;
     printf("Tarefa adicionada!\n");
+    salvarEmArquivo(vetor, *total);
 }
 
 void listarTarefas(Tarefa *vetor, int total) {
@@ -68,6 +76,8 @@ void listarTarefas(Tarefa *vetor, int total) {
         default:
             printf("Opção inválida. Mostrando sem ordenação.\n");
     }
+
+    printf("\nLista de tarefas:\n");
 
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
@@ -143,6 +153,33 @@ void ordenarData(Tarefa *vetor, int total) {
     printf("Tarefas ordenadas por data!\n");
 }
 
+void apagarTarefa(Tarefa *vetor, int *total) {
+    int i;
+    if (*total == 0) {
+        printf("Nenhuma tarefa para apagar.\n");
+        return;
+    }
+
+    int id;
+    printf("Digite o número da tarefa que deseja apagar (1 a %d): ", *total);
+    scanf("%d", &id);
+
+    if (id < 1 || id > *total) {
+        printf("ID inválido.\n");
+        return;
+    }
+
+    // Apaga a tarefa movendo as próximas para trás
+    for (i = id - 1; i < *total - 1; i++) {
+        vetor[i] = vetor[i + 1];
+    }
+
+    (*total)--;
+    printf("Tarefa apagada com sucesso!\n");
+
+    salvarEmArquivo(vetor, *total); // salvar após apagar
+}
+
 int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busca){
     int i;
     int encontrados = 0;
@@ -205,3 +242,27 @@ void carregarDeArquivo(Tarefa* vetor, int* total) {
     fclose(arquivo);
     printf("Tarefas carregadas com sucesso!\n");
 }   
+
+bool validarData(const char *data) {
+    int dia, mes, ano;
+
+    if (sscanf(data, "%d/%d/%d", &dia, &mes, &ano) != 3)
+        return false;
+
+    if (dia < 1 || dia > 31) return false;
+    if (mes < 1 || mes > 12) return false;
+    if (ano < 1900 || ano > 2100) return false;
+
+    // Validação extra para meses com menos de 31 dias
+    if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && dia > 30)
+        return false;
+
+    // Fevereiro e ano bissexto
+    if (mes == 2) {
+        bool bissexto = (ano % 4 == 0 && (ano % 100 != 0 || ano % 400 == 0));
+        if (dia > (bissexto ? 29 : 28))
+            return false;
+    }
+
+    return true;
+}

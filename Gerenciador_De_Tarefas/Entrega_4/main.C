@@ -17,6 +17,7 @@ int main() {
         printf("2 - Listar tarefas\n");
         printf("3 - Buscar tarefa\n");
         printf("4 - Ordenar tarefas\n");
+        printf("5 - Apagar tarefa\n");
         printf("0 - Sair\n");
         printf("======================================\n");
         printf("Escolha: ");
@@ -46,6 +47,9 @@ int main() {
                 if (tipo_ordenar == 1) ordenarPrioridade(tarefas, totalTarefas);
                 else if (tipo_ordenar == 2) ordenarData(tarefas, totalTarefas);
                 else printf("Opção inválida.\n");
+                break;
+            case 5:
+                apagarTarefa(tarefas, &totalTarefas);
                 break;
             case 0:
                 printf("Saindo...\n");
