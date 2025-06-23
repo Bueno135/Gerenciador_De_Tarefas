@@ -82,6 +82,7 @@ void listarTarefas(Tarefa *vetor, int total) {
 
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
+        printf("ID: %d\n", vetor[i].id);
         printf("Título: %s\n", vetor[i].titulo);
         printf("Descrição: %s\n", vetor[i].descricao);
         printf("Prioridade: %d\n", vetor[i].prioridade);
