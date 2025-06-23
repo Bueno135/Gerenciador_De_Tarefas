@@ -1,6 +1,25 @@
 #include <stdio.h>
 #include "tarefas.h"
 #include <string.h>
+#include <stdlib.h>
+
+
+void pausa() {
+    printf("\nPressione ENTER para continuar...");
+    while (getchar() != '\n'); // Limpa qualquer caractere pendente no buffer
+    getchar(); // Aguarda o ENTER
+}
+
+
+void limparTela() {
+    pausa();
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
 
 int main() {
     Tarefa tarefas[MAX_TAREFAS];
@@ -34,6 +53,7 @@ int main() {
                 break;
             case 2: //listar tarefa
                 listarTarefas(tarefas, totalTarefas);
+                limparTela();
                 break;
             case 3: //buscar tarefa
                 printf("\n1 - Busca por titulo\n2 - Busca por status\n3 - Busca por id\nEscolha: ");
@@ -43,6 +63,7 @@ int main() {
                 fgets(valor_pesquisado, sizeof(valor_pesquisado), stdin);
                 valor_pesquisado[strcspn(valor_pesquisado, "\n")] = '\0'; // remover \n
                 buscar(tarefas, totalTarefas, valor_pesquisado, tipo_busca);
+                limparTela();
                 break;
             case 4: //ordenar tarefa
                 printf("1 - Ordenar por prioridade\n2 - Ordenar por data\nEscolha: ");
@@ -52,16 +73,21 @@ int main() {
                 if (tipo_ordenar == 1) ordenarPrioridade(tarefas, totalTarefas);
                 else if (tipo_ordenar == 2) ordenarData(tarefas, totalTarefas);
                 else printf("Opção inválida.\n");
+                limparTela();
                 break;
             case 5: //editar tarefa
                 listarTarefas(tarefas, totalTarefas);
                 editarTarefa(tarefas, totalTarefas);
+                limparTela();
                 break;
             case 6: //excluir tarefa
+                listarTarefas(tarefas, totalTarefas);
                 apagarTarefa(tarefas, &totalTarefas);
+                limparTela();
                 break;
             case 7: //relatorio de tarefas pendentes
                 relatorioTarefas(tarefas, totalTarefas);
+                limparTela();
                 break;
             case 0:
                 printf("Saindo...\n");
