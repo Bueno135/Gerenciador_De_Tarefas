@@ -41,6 +41,7 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
 }
 
 void listarTarefas(Tarefa *vetor, int total) {
+    int i;
     if (total == 0) {
         printf("Nenhuma tarefa cadastrada.\n");
         return;
@@ -68,7 +69,7 @@ void listarTarefas(Tarefa *vetor, int total) {
             printf("Opção inválida. Mostrando sem ordenação.\n");
     }
 
-    for (int i = 0; i < total; i++) {
+    for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
         printf("Título: %s\n", vetor[i].titulo);
         printf("Descrição: %s\n", vetor[i].descricao);
@@ -81,8 +82,9 @@ void listarTarefas(Tarefa *vetor, int total) {
 }
 
 void ordenarPrioridadeDentroDaMesmaData(Tarefa *vetor, int total) {
-    for (int i = 0; i < total - 1; i++) {
-        for (int j = i + 1; j < total; j++) {
+    int i, j;
+    for (i = 0; i < total - 1; i++) {
+        for (j = i + 1; j < total; j++) {
             if (strcmp(vetor[i].data, vetor[j].data) == 0 && vetor[i].prioridade > vetor[j].prioridade) {
                 Tarefa temp = vetor[i];
                 vetor[i] = vetor[j];

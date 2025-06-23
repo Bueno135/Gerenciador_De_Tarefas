@@ -16,6 +16,7 @@ int main() {
         printf("1 - Adicionar tarefa\n");
         printf("2 - Listar tarefas\n");
         printf("3 - Buscar tarefa\n");
+        printf("4 - Ordenar tarefas\n");
         printf("0 - Sair\n");
         printf("======================================\n");
         printf("Escolha: ");
