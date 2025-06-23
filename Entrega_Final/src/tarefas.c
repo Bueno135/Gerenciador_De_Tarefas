@@ -381,7 +381,7 @@ bool validarData(const char *data) {
     return true;
 }
 
-void relatorioTarefasPendentes(Tarefa *vetor, int total) {
+void relatorioTarefas(Tarefa *vetor, int total) {
     if (total == 0) {
         printf("Nenhuma tarefa cadastrada.\n");
         return;
