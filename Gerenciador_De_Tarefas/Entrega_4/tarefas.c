@@ -78,6 +78,7 @@ void listarTarefas(Tarefa *vetor, int total) {
     }
 
     printf("\nLista de tarefas:\n");
+    printf("\n");
 
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
