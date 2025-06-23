@@ -17,22 +17,26 @@ int main() {
         printf("2 - Listar tarefas\n");
         printf("3 - Buscar tarefa\n");
         printf("4 - Ordenar tarefas\n");
-        printf("5 - Apagar tarefa\n");
-        printf("0 - Sair\n");
+        printf("5 - Editar tarefa\n");
+        printf("6 - Excluir tarefa\n");
+        printf("7 - Relatorio de tarefas pendentes\n");
+        printf("0 - Salvar e sair\n");
         printf("======================================\n");
+        printf("\nTotal de tarefas cadastradas: %d\n", totalTarefas);
         printf("Escolha: ");
 
         scanf("%d", &opcao);
+        while (getchar() != '\n');  // Limpa o buffer
         //Menu para escolher qual opção você deseja
         switch (opcao) {
-            case 1:
+            case 1: // adic tarefa
                 adicionarTarefa(tarefas, &totalTarefas);
                 break;
-            case 2:
+            case 2: //listar tarefa
                 listarTarefas(tarefas, totalTarefas);
                 break;
-            case 3:
-                printf("\n1 - Busca por titulo\n2 - Busca por status\nEscolha: ");
+            case 3: //buscar tarefa
+                printf("\n1 - Busca por titulo\n2 - Busca por status\n3 - Busca por id\nEscolha: ");
                 scanf("%d", &tipo_busca);
                 printf("\nItem buscado: \n");
                 getchar(); // limpar o buffer
@@ -40,16 +44,24 @@ int main() {
                 valor_pesquisado[strcspn(valor_pesquisado, "\n")] = '\0'; // remover \n
                 buscar(tarefas, totalTarefas, valor_pesquisado, tipo_busca);
                 break;
-            case 4:
+            case 4: //ordenar tarefa
                 printf("1 - Ordenar por prioridade\n2 - Ordenar por data\nEscolha: ");
                 int tipo_ordenar;
                 scanf("%d", &tipo_ordenar);
+                while (getchar() != '\n');  // Limpa o buffer
                 if (tipo_ordenar == 1) ordenarPrioridade(tarefas, totalTarefas);
                 else if (tipo_ordenar == 2) ordenarData(tarefas, totalTarefas);
                 else printf("Opção inválida.\n");
                 break;
-            case 5:
+            case 5: //editar tarefa
+                listarTarefas(tarefas, totalTarefas);
+                editarTarefa(tarefas, totalTarefas);
+                break;
+            case 6: //excluir tarefa
                 apagarTarefa(tarefas, &totalTarefas);
+                break;
+            case 7: //relatorio de tarefas pendentes
+                relatorioTarefas(tarefas, totalTarefas);
                 break;
             case 0:
                 printf("Saindo...\n");

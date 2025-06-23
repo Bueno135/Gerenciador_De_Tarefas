@@ -154,32 +154,130 @@ void ordenarData(Tarefa *vetor, int total) {
     printf("Tarefas ordenadas por data!\n");
 }
 
+void editarTarefa(Tarefa *vetor, int total){
+    
+    if (total == 0) {
+        printf("Nenhuma tarefa cadastrada.\n");
+        return;
+    }
+
+    int id, i;
+    printf("Digite o ID da tarefa que deseja editar: ");
+    scanf("%d", &id);
+
+    // Procurar o índice da tarefa com esse ID
+    int indice = -1;
+    for (i = 0; i < total; i++) {
+        if (vetor[i].id == id) {
+            indice = i;
+            break;
+        }
+    }
+
+    if (indice == -1) {
+        printf("Tarefa não encontrada.\n");
+        return;
+    }
+
+    int opcao;
+    printf("\nO que deseja editar?\n");
+    printf("1 - Título\n");
+    printf("2 - Descrição\n");
+    printf("3 - Data\n");
+    printf("4 - Status\n");
+    printf("5 - Prioridade\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    getchar(); // limpar buffer
+
+    char novoTexto[100];
+
+    switch (opcao) {
+        case 1:
+            printf("Título atual: %s\n", vetor[indice].titulo);
+            printf("Digite o novo título: ");
+            fgets(novoTexto, sizeof(novoTexto), stdin);
+            novoTexto[strcspn(novoTexto, "\n")] = '\0';
+            strcpy(vetor[indice].titulo, novoTexto);
+            break;
+
+        case 2:
+            printf("Descrição atual: %s\n", vetor[indice].descricao);
+            printf("Digite a nova descrição: ");
+            fgets(novoTexto, sizeof(novoTexto), stdin);
+            novoTexto[strcspn(novoTexto, "\n")] = '\0';
+            strcpy(vetor[indice].descricao, novoTexto);
+            break;
+
+        case 3:
+            do {
+                printf("Data atual: %s\n", vetor[indice].data);
+                printf("Digite a nova data (DD/MM/AAAA): ");
+                scanf("%s", vetor[indice].data);
+                if (!validarData(vetor[indice].data)) {
+                    printf("Data inválida. Tente novamente.\n");
+                }
+            } while (!validarData(vetor[indice].data));
+            break;
+
+        case 4:
+            do {
+                printf("Status atual: %d (0 = pendente, 1 = concluída)\n", vetor[indice].status);
+                printf("Digite o novo status (0 ou 1): ");
+                scanf("%d", &vetor[indice].status);
+            } while (vetor[indice].status != 0 && vetor[indice].status != 1);
+            break;
+
+        case 5:
+            do {
+                printf("Prioridade atual: %d\n", vetor[indice].prioridade);
+                printf("Digite a nova prioridade (1-5): ");
+                scanf("%d", &vetor[indice].prioridade);
+            } while (vetor[indice].prioridade < 1 || vetor[indice].prioridade > 5);
+            break;
+
+        default:
+            printf("Opção inválida.\n");
+            return;
+    }
+
+    printf("Tarefa atualizada com sucesso!\n");
+    salvarEmArquivo(vetor, total);
+}
+
 void apagarTarefa(Tarefa *vetor, int *total) {
-    int i;
     if (*total == 0) {
         printf("Nenhuma tarefa para apagar.\n");
         return;
     }
 
-    int id;
-    printf("Digite o número da tarefa que deseja apagar (1 a %d): ", *total);
+    int id, i;
+    printf("Digite o ID da tarefa que deseja apagar: ");
     scanf("%d", &id);
 
-    if (id < 1 || id > *total) {
-        printf("ID inválido.\n");
+    int indice = -1;
+    for (i = 0; i < *total; i++) {
+        if (vetor[i].id == id) {
+            indice = i;
+            break;
+        }
+    }
+
+    if (indice == -1) {
+        printf("Tarefa com ID %d não encontrada.\n", id);
         return;
     }
 
-    // Apaga a tarefa movendo as próximas para trás
-    for (i = id - 1; i < *total - 1; i++) {
+    for (i = indice; i < *total - 1; i++) {
         vetor[i] = vetor[i + 1];
     }
 
     (*total)--;
-    printf("Tarefa apagada com sucesso!\n");
 
-    salvarEmArquivo(vetor, *total); // salvar após apagar
+    printf("Tarefa apagada com sucesso!\n");
+    salvarEmArquivo(vetor, *total);
 }
+
 
 int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busca){
     int i;
@@ -205,7 +303,22 @@ int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busc
                 }
             }
             break;
-
+        case 3: // busca por ID
+            for (i = 0; i < total; i++) {
+                char idStr[10];
+                sprintf(idStr, "%d", vetor[i].id);
+                if (strcmp(idStr, valor_pesquisado) == 0) {
+                    printf("\nTarefa encontrada:\n");
+                    printf("ID: %d\n", vetor[i].id);
+                    printf("Título: %s\n", vetor[i].titulo);
+                    printf("Descrição: %s\n", vetor[i].descricao);
+                    printf("Prioridade: %d\n", vetor[i].prioridade);
+                    printf("Data: %s\n", vetor[i].data);
+                    printf("Status: %d\n", vetor[i].status);
+                    encontrados++;
+                }
+            }
+            break;
         default:
             printf("Tipo de busca inválido.\n");
             return 0;
@@ -267,3 +380,60 @@ bool validarData(const char *data) {
 
     return true;
 }
+
+void relatorioTarefas(Tarefa *vetor, int total) {
+    if (total == 0) {
+        printf("Nenhuma tarefa cadastrada.\n");
+        return;
+    }
+
+    int pendentes = 0, concluidas = 0;
+    int porPrioridade[6] = {0}; // Índices 1 a 5, ignorando 0
+    char datasUnicas[MAX_TAREFAS][11];
+    int quantidadePorData[MAX_TAREFAS] = {0};
+    int totalDatas = 0;
+
+    for (int i = 0; i < total; i++) {
+        // Contagem de status
+        if (vetor[i].status == 0) pendentes++;
+        else concluidas++;
+
+        // Contagem por prioridade
+        if (vetor[i].prioridade >= 1 && vetor[i].prioridade <=5)
+            porPrioridade[vetor[i].prioridade]++;
+
+        // Contagem por data
+        int encontrada = 0;
+        for (int j = 0; j < totalDatas; j++) {
+            if (strcmp(vetor[i].data, datasUnicas[j]) == 0) {
+                quantidadePorData[j]++;
+                encontrada = 1;
+                break;
+            }
+        }
+        if (!encontrada) {
+            strcpy(datasUnicas[totalDatas], vetor[i].data);
+            quantidadePorData[totalDatas] = 1;
+            totalDatas++;
+        }
+    }
+
+    printf("\n========= RELATÓRIO DE TAREFAS =========\n");
+    printf("Total de tarefas: %d\n", total);
+    printf("Tarefas pendentes: %d\n", pendentes);
+    printf("Tarefas concluídas: %d\n", concluidas);
+
+    printf("\nQuantidade de tarefas por prioridade:\n");
+    for (int i = 1; i <= 5; i++) {
+        printf("Prioridade %d: %d tarefas\n", i, porPrioridade[i]);
+    }
+
+    printf("\nQuantidade de tarefas por data:\n");
+    for (int i = 0; i < totalDatas; i++) {
+        printf("Data %s: %d tarefas\n", datasUnicas[i], quantidadePorData[i]);
+    }
+
+    printf("=========================================\n");
+}
+
+

@@ -18,11 +18,14 @@ void adicionarTarefa(Tarefa *vetor, int *total);
 void listarTarefas(Tarefa *vetor, int total);
 void salvarEmArquivo(Tarefa*, int);
 void carregarDeArquivo(Tarefa*, int*);
+void editarTarefa(Tarefa *vetor, int total);
 void apagarTarefa(Tarefa *vetor, int *total);
 void ordenarPrioridadeDentroDaMesmaData(Tarefa *vetor, int total);
 void ordenarPrioridade(Tarefa *vetor, int total);
 void ordenarData(Tarefa *vetor, int total);
 int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busca);
+void relatorioTarefas(Tarefa *vetor, int total);
+
 
 bool validarData(const char *data);
 
