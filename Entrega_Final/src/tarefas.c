@@ -381,59 +381,63 @@ bool validarData(const char *data) {
     return true;
 }
 
-void relatorioTarefas(Tarefa *vetor, int total) {
+void relatorioTarefasPendentes(Tarefa *vetor, int total) {
     if (total == 0) {
         printf("Nenhuma tarefa cadastrada.\n");
         return;
     }
 
-    int pendentes = 0, concluidas = 0;
-    int porPrioridade[6] = {0}; // Índices 1 a 5, ignorando 0
+    int pendentes = 0;
+    int porPrioridade[6] = {0}; // Índices de 1 a 5
     char datasUnicas[MAX_TAREFAS][11];
     int quantidadePorData[MAX_TAREFAS] = {0};
     int totalDatas = 0;
 
     for (int i = 0; i < total; i++) {
-        // Contagem de status
-        if (vetor[i].status == 0) pendentes++;
-        else concluidas++;
+        if (vetor[i].status == 0) {
+            pendentes++;
 
-        // Contagem por prioridade
-        if (vetor[i].prioridade >= 1 && vetor[i].prioridade <=5)
-            porPrioridade[vetor[i].prioridade]++;
-
-        // Contagem por data
-        int encontrada = 0;
-        for (int j = 0; j < totalDatas; j++) {
-            if (strcmp(vetor[i].data, datasUnicas[j]) == 0) {
-                quantidadePorData[j]++;
-                encontrada = 1;
-                break;
+            // Contagem por prioridade
+            if (vetor[i].prioridade >= 1 && vetor[i].prioridade <= 5) {
+                porPrioridade[vetor[i].prioridade]++;
             }
-        }
-        if (!encontrada) {
-            strcpy(datasUnicas[totalDatas], vetor[i].data);
-            quantidadePorData[totalDatas] = 1;
-            totalDatas++;
+
+            // Contagem por data
+            int encontrada = 0;
+            for (int j = 0; j < totalDatas; j++) {
+                if (strcmp(vetor[i].data, datasUnicas[j]) == 0) {
+                    quantidadePorData[j]++;
+                    encontrada = 1;
+                    break;
+                }
+            }
+            if (!encontrada) {
+                strcpy(datasUnicas[totalDatas], vetor[i].data);
+                quantidadePorData[totalDatas] = 1;
+                totalDatas++;
+            }
         }
     }
 
-    printf("\n========= RELATÓRIO DE TAREFAS =========\n");
-    printf("Total de tarefas: %d\n", total);
-    printf("Tarefas pendentes: %d\n", pendentes);
-    printf("Tarefas concluídas: %d\n", concluidas);
+    if (pendentes == 0) {
+        printf("\nNão há tarefas pendentes.\n");
+        return;
+    }
 
-    printf("\nQuantidade de tarefas por prioridade:\n");
+    printf("\n========= RELATÓRIO DE TAREFAS PENDENTES =========\n");
+    printf("Total de tarefas pendentes: %d\n", pendentes);
+
+    printf("\nQuantidade de tarefas pendentes por prioridade:\n");
     for (int i = 1; i <= 5; i++) {
         printf("Prioridade %d: %d tarefas\n", i, porPrioridade[i]);
     }
 
-    printf("\nQuantidade de tarefas por data:\n");
+    printf("\nQuantidade de tarefas pendentes por data:\n");
     for (int i = 0; i < totalDatas; i++) {
         printf("Data %s: %d tarefas\n", datasUnicas[i], quantidadePorData[i]);
     }
 
-    printf("=========================================\n");
+    printf("===================================================\n");
 }
 
 
