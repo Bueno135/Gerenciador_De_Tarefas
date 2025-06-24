@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include "tarefas.h"
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 void adicionarTarefa(Tarefa *vetor, int *total) {
     if (*total >= MAX_TAREFAS) {
         printf("Limite de tarefas atingido.\n");
@@ -11,13 +16,13 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
 
     vetor[*total].id = *total + 1;
 
-    printf("Digite o título da tarefa: ");
-    getchar(); // limpar buffer
+    printf("Digite o titulo da tarefa: ");
+    limparBuffer(); // limpar buffer
     fgets(vetor[*total].titulo, 100, stdin);
     vetor[*total].titulo[strcspn(vetor[*total].titulo, "\n")] = '\0';
 
-    printf("Digite a descrição da tarefa: ");
-    getchar(); // limpar buffer
+    printf("Digite a descricao da tarefa: ");
+    limparBuffer(); // limpar buffer
     fgets(vetor[*total].descricao, TAM_DESC, stdin);
     vetor[*total].descricao[strcspn(vetor[*total].descricao, "\n")] = '\0'; // remover '\n'
     //Adicionar tarefa e sua descrição
@@ -59,7 +64,7 @@ void listarTarefas(Tarefa *vetor, int total) {
     printf("\nComo deseja ordenar as tarefas?\n");
     printf("1 - Por prioridade\n");
     printf("2 - Por data (e prioridade dentro da data)\n");
-    printf("3 - Sem ordenação\n");
+    printf("3 - Sem ordenacao\n");
     printf("Escolha: ");
     scanf("%d", &tipo_ordenacao);
 
@@ -74,7 +79,7 @@ void listarTarefas(Tarefa *vetor, int total) {
         case 3:
             break;
         default:
-            printf("Opção inválida. Mostrando sem ordenação.\n");
+            printf("Opcao invalida. Mostrando sem ordenacao.\n");
     }
 
     printf("\nLista de tarefas:\n");
@@ -82,8 +87,8 @@ void listarTarefas(Tarefa *vetor, int total) {
 
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
-        printf("Título: %s\n", vetor[i].titulo);
-        printf("Descrição: %s\n", vetor[i].descricao);
+        printf("Titulo: %s\n", vetor[i].titulo);
+        printf("Descricao: %s\n", vetor[i].descricao);
         printf("Prioridade: %d\n", vetor[i].prioridade);
         printf("Data: %s\n", vetor[i].data);
         printf("Status: %d\n", vetor[i].status);
@@ -175,18 +180,18 @@ void editarTarefa(Tarefa *vetor, int total){
     }
 
     if (indice == -1) {
-        printf("Tarefa não encontrada.\n");
+        printf("Tarefa nao encontrada.\n");
         return;
     }
 
     int opcao;
     printf("\nO que deseja editar?\n");
-    printf("1 - Título\n");
-    printf("2 - Descrição\n");
+    printf("1 - Titulo\n");
+    printf("2 - Descricao\n");
     printf("3 - Data\n");
     printf("4 - Status\n");
     printf("5 - Prioridade\n");
-    printf("Escolha uma opção: ");
+    printf("Escolha uma opcao: ");
     scanf("%d", &opcao);
     getchar(); // limpar buffer
 
@@ -194,15 +199,15 @@ void editarTarefa(Tarefa *vetor, int total){
 
     switch (opcao) {
         case 1:
-            printf("Título atual: %s\n", vetor[indice].titulo);
-            printf("Digite o novo título: ");
+            printf("Titulo atual: %s\n", vetor[indice].titulo);
+            printf("Digite o novo titulo: ");
             fgets(novoTexto, sizeof(novoTexto), stdin);
             novoTexto[strcspn(novoTexto, "\n")] = '\0';
             strcpy(vetor[indice].titulo, novoTexto);
             break;
 
         case 2:
-            printf("Descrição atual: %s\n", vetor[indice].descricao);
+            printf("Descricao atual: %s\n", vetor[indice].descricao);
             printf("Digite a nova descrição: ");
             fgets(novoTexto, sizeof(novoTexto), stdin);
             novoTexto[strcspn(novoTexto, "\n")] = '\0';
@@ -215,14 +220,14 @@ void editarTarefa(Tarefa *vetor, int total){
                 printf("Digite a nova data (DD/MM/AAAA): ");
                 scanf("%s", vetor[indice].data);
                 if (!validarData(vetor[indice].data)) {
-                    printf("Data inválida. Tente novamente.\n");
+                    printf("Data invalida. Tente novamente.\n");
                 }
             } while (!validarData(vetor[indice].data));
             break;
 
         case 4:
             do {
-                printf("Status atual: %d (0 = pendente, 1 = concluída)\n", vetor[indice].status);
+                printf("Status atual: %d (0 = pendente, 1 = concluida)\n", vetor[indice].status);
                 printf("Digite o novo status (0 ou 1): ");
                 scanf("%d", &vetor[indice].status);
             } while (vetor[indice].status != 0 && vetor[indice].status != 1);
@@ -237,7 +242,7 @@ void editarTarefa(Tarefa *vetor, int total){
             break;
 
         default:
-            printf("Opção inválida.\n");
+            printf("Opcao invalida.\n");
             return;
     }
 
@@ -310,8 +315,8 @@ int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busc
                 if (strcmp(idStr, valor_pesquisado) == 0) {
                     printf("\nTarefa encontrada:\n");
                     printf("ID: %d\n", vetor[i].id);
-                    printf("Título: %s\n", vetor[i].titulo);
-                    printf("Descrição: %s\n", vetor[i].descricao);
+                    printf("Titulo: %s\n", vetor[i].titulo);
+                    printf("Descricao: %s\n", vetor[i].descricao);
                     printf("Prioridade: %d\n", vetor[i].prioridade);
                     printf("Data: %s\n", vetor[i].data);
                     printf("Status: %d\n", vetor[i].status);
@@ -320,7 +325,7 @@ int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busc
             }
             break;
         default:
-            printf("Tipo de busca inválido.\n");
+            printf("Tipo de busca invalido.\n");
             return 0;
     }
 
@@ -420,11 +425,11 @@ void relatorioTarefas(Tarefa *vetor, int total) {
     }
 
     if (pendentes == 0) {
-        printf("\nNão há tarefas pendentes.\n");
+        printf("\nNao ha tarefas pendentes.\n");
         return;
     }
 
-    printf("\n========= RELATÓRIO DE TAREFAS PENDENTES =========\n");
+    printf("\n========= RELATORIO DE TAREFAS PENDENTES =========\n");
     printf("Total de tarefas pendentes: %d\n", pendentes);
 
     printf("\nQuantidade de tarefas pendentes por prioridade:\n");
