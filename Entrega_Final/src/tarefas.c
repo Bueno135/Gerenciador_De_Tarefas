@@ -3,10 +3,6 @@
 #include <stdbool.h>
 #include "tarefas.h"
 
-void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
 
 void adicionarTarefa(Tarefa *vetor, int *total) {
     if (*total >= MAX_TAREFAS) {
@@ -17,14 +13,12 @@ void adicionarTarefa(Tarefa *vetor, int *total) {
     vetor[*total].id = *total + 1;
 
     printf("Digite o titulo da tarefa: ");
-    limparBuffer(); // limpar buffer
     fgets(vetor[*total].titulo, 100, stdin);
     vetor[*total].titulo[strcspn(vetor[*total].titulo, "\n")] = '\0';
 
     printf("Digite a descricao da tarefa: ");
-    limparBuffer(); // limpar buffer
     fgets(vetor[*total].descricao, TAM_DESC, stdin);
-    vetor[*total].descricao[strcspn(vetor[*total].descricao, "\n")] = '\0'; // remover '\n'
+    vetor[*total].descricao[strcspn(vetor[*total].descricao, "\n")] = '\0';
     //Adicionar tarefa e sua descrição
 
     do {
