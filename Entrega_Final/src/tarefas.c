@@ -82,7 +82,7 @@ void listarTarefas(Tarefa *vetor, int total) {
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
         printf("ID: %d\n", vetor[i].id);
-        printf("Tttulo: %s\n", vetor[i].titulo);
+        printf("Titulo: %s\n", vetor[i].titulo);
         printf("Descricao: %s\n", vetor[i].descricao);
         printf("Prioridade: %d\n", vetor[i].prioridade);
         printf("Data: %s\n", vetor[i].data);
@@ -365,26 +365,46 @@ void salvarEmArquivo(Tarefa* vetor, int total) {
 void carregarDeArquivo(Tarefa* vetor, int* total) {
     FILE *arquivo = fopen("tarefas.txt", "r");
     if (arquivo == NULL) {
-        printf("Arquivo não encontrado.\n");
+        printf("Arquivo nao encontrado.\n");
         *total = 0;
         return;
     }
 
     *total = 0;
+    char linha[256];
 
-    while (!feof(arquivo) && *total < MAX_TAREFAS) {
+    while (*total < MAX_TAREFAS) {
         Tarefa t;
 
-        if (fscanf(arquivo, "%d\n", &t.id) != 1) break;
-        fgets(t.titulo, sizeof(t.titulo), arquivo);
-        t.titulo[strcspn(t.titulo, "\n")] = '\0';
+        // ID
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        if (sscanf(linha, "ID: %d", &t.id) != 1) break;
 
-        fgets(t.descricao, sizeof(t.descricao), arquivo);
-        t.descricao[strcspn(t.descricao, "\n")] = '\0';
+        // Titulo
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        linha[strcspn(linha, "\n")] = '\0';
+        if (sscanf(linha, "Titulo: %[^\n]", t.titulo) != 1) break;
 
-        if (fscanf(arquivo, "%d\n", &t.prioridade) != 1) break;
-        fscanf(arquivo, "%s\n", t.data);
-        if (fscanf(arquivo, "%d\n", &t.status) != 1) break;
+        // Descricao
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        linha[strcspn(linha, "\n")] = '\0';
+        if (sscanf(linha, "Descricao: %[^\n]", t.descricao) != 1) break;
+
+        // Prioridade
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        if (sscanf(linha, "Prioridade: %d", &t.prioridade) != 1) break;
+
+        // Data
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        linha[strcspn(linha, "\n")] = '\0';
+        if (sscanf(linha, "Data: %s", t.data) != 1) break;
+
+        // Status
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
+        if (sscanf(linha, "Status: %d", &t.status) != 1) break;
+
+        // Linha separadora
+        if (!fgets(linha, sizeof(linha), arquivo)) break;
 
         vetor[*total] = t;
         (*total)++;
