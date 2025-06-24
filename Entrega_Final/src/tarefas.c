@@ -342,16 +342,24 @@ int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busc
 }
 
 void salvarEmArquivo(Tarefa* vetor, int total) {
-    FILE *arquivo = fopen("tarefas.dat", "wb");
+    FILE *arquivo = fopen("tarefas.txt", "w");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo para salvar.\n");
+        printf("Erro ao abrir o arquivo de texto para exportar.\n");
         return;
     }
 
-    fwrite(&total, sizeof(int), 1, arquivo); // salva total de tarefas
-    fwrite(vetor, sizeof(Tarefa), total, arquivo); // salva vetor
+    for (int i = 0; i < total; i++) {
+        fprintf(arquivo, "ID: %d\n", vetor[i].id);
+        fprintf(arquivo, "Titulo: %s\n", vetor[i].titulo);
+        fprintf(arquivo, "Descricao: %s\n", vetor[i].descricao);
+        fprintf(arquivo, "Prioridade: %d\n", vetor[i].prioridade);
+        fprintf(arquivo, "Data: %s\n", vetor[i].data);
+        fprintf(arquivo, "Status: %d\n", vetor[i].status);
+        fprintf(arquivo, "---------------------------\n");
+    }
+
     fclose(arquivo);
-    printf("Tarefas salvas com sucesso!\n");
+    printf("Tarefas exportadas em texto!\n");
 }
 
 void carregarDeArquivo(Tarefa* vetor, int* total) {
