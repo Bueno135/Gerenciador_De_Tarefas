@@ -363,17 +363,37 @@ void salvarEmArquivo(Tarefa* vetor, int total) {
 }
 
 void carregarDeArquivo(Tarefa* vetor, int* total) {
-    FILE *arquivo = fopen("tarefas.dat", "rb");
+    FILE *arquivo = fopen("tarefas.txt", "r");
     if (arquivo == NULL) {
         printf("Arquivo não encontrado.\n");
+        *total = 0;
         return;
     }
 
-    fread(total, sizeof(int), 1, arquivo); // lê o total de tarefas
-    fread(vetor, sizeof(Tarefa), *total, arquivo); // lê o vetor
+    *total = 0;
+
+    while (!feof(arquivo) && *total < MAX_TAREFAS) {
+        Tarefa t;
+
+        if (fscanf(arquivo, "%d\n", &t.id) != 1) break;
+        fgets(t.titulo, sizeof(t.titulo), arquivo);
+        t.titulo[strcspn(t.titulo, "\n")] = '\0';
+
+        fgets(t.descricao, sizeof(t.descricao), arquivo);
+        t.descricao[strcspn(t.descricao, "\n")] = '\0';
+
+        if (fscanf(arquivo, "%d\n", &t.prioridade) != 1) break;
+        fscanf(arquivo, "%s\n", t.data);
+        if (fscanf(arquivo, "%d\n", &t.status) != 1) break;
+
+        vetor[*total] = t;
+        (*total)++;
+    }
+
     fclose(arquivo);
     printf("Tarefas carregadas com sucesso!\n");
-}   
+}
+
 
 bool validarData(const char *data) {
     int dia, mes, ano;
