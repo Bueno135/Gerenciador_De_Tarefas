@@ -87,8 +87,9 @@ void listarTarefas(Tarefa *vetor, int total) {
 
     for (i = 0; i < total; i++) {
         printf("Tarefa %d:\n", i + 1);
-        printf("Titulo: %s\n", vetor[i].titulo);
-        printf("Descricao: %s\n", vetor[i].descricao);
+        printf("ID: %d\n", vetor[i].id);
+        printf("Título: %s\n", vetor[i].titulo);
+        printf("Descrição: %s\n", vetor[i].descricao);
         printf("Prioridade: %d\n", vetor[i].prioridade);
         printf("Data: %s\n", vetor[i].data);
         printf("Status: %d\n", vetor[i].status);
@@ -250,6 +251,13 @@ void editarTarefa(Tarefa *vetor, int total){
     salvarEmArquivo(vetor, total);
 }
 
+void atualizarIDs(Tarefa *vetor, int total) {
+    for (int i = 0; i < total; i++) {
+        vetor[i].id = i + 1;
+    }
+}
+
+
 void apagarTarefa(Tarefa *vetor, int *total) {
     if (*total == 0) {
         printf("Nenhuma tarefa para apagar.\n");
@@ -279,9 +287,12 @@ void apagarTarefa(Tarefa *vetor, int *total) {
 
     (*total)--;
 
+    atualizarIDs(vetor, *total); // Atualiza os IDs após apagar
+
     printf("Tarefa apagada com sucesso!\n");
     salvarEmArquivo(vetor, *total);
 }
+
 
 
 int buscar(Tarefa *vetor, int total, const char *valor_pesquisado, int tipo_busca){
